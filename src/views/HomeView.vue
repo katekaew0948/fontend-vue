@@ -1,5 +1,5 @@
 <template>
-  <hello-world />
+  <hello-world message="Hello 1234"/>
 </template>
 
 <script>

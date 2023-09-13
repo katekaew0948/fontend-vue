@@ -9,10 +9,11 @@
           height="200"
         />
       </v-col>
+      <span @click="gotolink()">about</span>
 
       <v-col class="mb-4">
         <h1 class="display-2 font-weight-bold mb-3">
-          Welcome to Vuetify
+          Welcome to {{message}}
         </h1>
 
         <p class="subheading font-weight-regular">
@@ -32,6 +33,8 @@
         <h2 class="headline font-weight-bold mb-3">
           What's next?
         </h2>
+
+        
 
         <v-row justify="center">
           <a
@@ -95,6 +98,10 @@
 export default {
   name: 'HelloWorld',
 
+  props: {
+    message: String
+  },
+
   data: () => ({
     ecosystem: [
       {
@@ -146,6 +153,12 @@ export default {
         href: 'https://vuetifyjs.com/getting-started/frequently-asked-questions'
       }
     ]
-  })
+  }),
+
+  methods : {
+    gotolink (){
+      this.$router.push('/about')
+    }
+  }
 }
 </script>
