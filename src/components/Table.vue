@@ -2,8 +2,7 @@
  <div>
    <v-data-table
     :headers="headers"
-    :items="desserts"
-    sort-by="calories"
+    :items="employeeItem"
     class="elevation-1"
   >
     <template v-slot:top>
@@ -27,6 +26,9 @@
             </v-btn>
       
       </v-toolbar>
+    </template>
+    <template v-slot:[`item.role`] ="{ item }">
+      {{item.role.name}}
     </template>
     <template v-slot:[`item.actions`]="{ item }">
       <v-icon
@@ -70,8 +72,8 @@
                     md="4"
                   >
                     <v-text-field
-                      v-model="editedItem.name"
-                      label="Dessert name"
+                      v-model="firstName"
+                      label="ชื่อ"
                     ></v-text-field>
                   </v-col>
                   <v-col
@@ -80,8 +82,8 @@
                     md="4"
                   >
                     <v-text-field
-                      v-model="editedItem.calories"
-                      label="Calories"
+                      v-model="lastName"
+                      label="นามสกุล"
                     ></v-text-field>
                   </v-col>
                   <v-col
@@ -90,8 +92,8 @@
                     md="4"
                   >
                     <v-text-field
-                      v-model="editedItem.fat"
-                      label="Fat (g)"
+                      v-model="salary"
+                      label="เงินเดือน"
                     ></v-text-field>
                   </v-col>
                   <v-col
@@ -100,18 +102,8 @@
                     md="4"
                   >
                     <v-text-field
-                      v-model="editedItem.carbs"
-                      label="Carbs (g)"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="4"
-                  >
-                    <v-text-field
-                      v-model="editedItem.protein"
-                      label="Protein (g)"
+                      v-model="role"
+                      label="ตำแหน่ง"
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -154,22 +146,27 @@
 <script>
 export default {
     data: () => ({
+      firstName: '',
+      lastName: '',
+      salary: 0,
+      role: '',
+      idEmployee: 0,
       dialog: false,
       dialogDelete: false,
       headers: [
         {
-          text: 'Dessert (100g serving)',
+          text: 'ไอดี',
           align: 'start',
           sortable: false,
-          value: 'name',
+          value: 'id',
         },
-        { text: 'Calories', value: 'calories' },
-        { text: 'Fat (g)', value: 'fat' },
-        { text: 'Carbs (g)', value: 'carbs' },
-        { text: 'Protein (g)', value: 'protein' },
+        { text: 'ชื่อ', value: 'firstName' },
+        { text: 'นามสกุล', value: 'lastName' },
+        { text: 'เงินเดือน', value: 'salary' },
+        { text: 'ตำแหน่ง', value: 'role' },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
-      desserts: [],
+      employeeItem: [],
       editedIndex: -1,
       editedItem: {
         name: '',
@@ -202,80 +199,15 @@ export default {
     },
 
     methods: {
-      initialize () {
-        this.desserts = [
-          {
-            name: 'Frozen Yogurt',
-            calories: 159,
-            fat: 6.0,
-            carbs: 24,
-            protein: 4.0,
-          },
-          {
-            name: 'Ice cream sandwich',
-            calories: 237,
-            fat: 9.0,
-            carbs: 37,
-            protein: 4.3,
-          },
-          {
-            name: 'Eclair',
-            calories: 262,
-            fat: 16.0,
-            carbs: 23,
-            protein: 6.0,
-          },
-          {
-            name: 'Cupcake',
-            calories: 305,
-            fat: 3.7,
-            carbs: 67,
-            protein: 4.3,
-          },
-          {
-            name: 'Gingerbread',
-            calories: 356,
-            fat: 16.0,
-            carbs: 49,
-            protein: 3.9,
-          },
-          {
-            name: 'Jelly bean',
-            calories: 375,
-            fat: 0.0,
-            carbs: 94,
-            protein: 0.0,
-          },
-          {
-            name: 'Lollipop',
-            calories: 392,
-            fat: 0.2,
-            carbs: 98,
-            protein: 0,
-          },
-          {
-            name: 'Honeycomb',
-            calories: 408,
-            fat: 3.2,
-            carbs: 87,
-            protein: 6.5,
-          },
-          {
-            name: 'Donut',
-            calories: 452,
-            fat: 25.0,
-            carbs: 51,
-            protein: 4.9,
-          },
-          {
-            name: 'KitKat',
-            calories: 518,
-            fat: 26.0,
-            carbs: 65,
-            protein: 7,
-          },
-        ]
-       
+     async initialize () {
+      this.employeeItem = []  // clear data in font
+      try {
+        var data = await this.axios.get('http://localhost:9000/employee')
+        console.log('data employee  ===> ' ,data)
+        this.employeeItem = data.data
+      } catch(error) {
+
+      }
       },
 
       openDialog(Actions ,item){
@@ -286,10 +218,17 @@ export default {
             this.formTitle = 'เพิ่มข้อมูล'
             this.editedItem = item
         } else {
+          console.log(item)
             this.formTitle = 'แก้ไขข้อมูล'
-            this.editedIndex = this.desserts.indexOf(item)
-            this.editedItem = item
+          //  this.editedIndex = this.desserts.indexOf(item)
+          //  this.editedItem = item
             this.dialog = true
+
+            this.firstName = item.firstName
+            this.lastName = item.lastName
+            this.salary = item.salary
+            this.role = item.role.name
+            this.idEmployee = item.id
         }
         
       },
@@ -300,33 +239,33 @@ export default {
         this.dialog = true
       },
 
-      deleteItem (item) {
-        this.editedIndex = this.desserts.indexOf(item)
-        this.editedItem = item
+    deleteItem (item) {
+        // this.editedIndex = this.desserts.indexOf(item)
+        // this.editedItem = item
+         
+        this.idEmployee = item.id
         this.dialogDelete = true
+
+       
       },
 
-      deleteItemConfirm () {
-        this.desserts.splice(this.editedIndex, 1)
+   async deleteItemConfirm () {
+         try {
+            var dataResponse = await this.axios.delete('http://localhost:9000/employee/' + this.idEmployee)
+            this.initialize()
+            console.log('data response ==> ', dataResponse)
+          } catch (error) {
+            console.log(error.message)
+          }
         this.closeDelete()
       },
 
       close () {
         this.dialog = false
-        this.editedItem = {
-        name: '',
-        calories: 0,
-        fat: 0,
-        carbs: 0,
-        protein: 0,
-        }
-        this.defaultItem = {
-            name: '',
-            calories: 0,
-            fat: 0,
-            carbs: 0,
-            protein: 0,
-        }
+        this.firstName = ''
+        this.lastName = ''
+        this.salary = ''
+        this.role = ''
       },
 
       closeDelete () {
@@ -335,12 +274,53 @@ export default {
           this.editedIndex = -1
       },
 
-      save (actions) {
+      async save (actions) {
         if(actions === 'เพิ่มข้อมูล'){
-            this.desserts.push(this.editedItem) // add data in array dessert 
-            
+           // this.desserts.push(this.editedItem) // add data in array dessert 
+           // this.close()
+          var data = {
+            firstName: this.firstName,
+            lastName: this.lastName,
+            salary: this.salary,
+            role: {
+              name: this.role
+              },
+              skills: [
+                {skill: ''}
+              ]
+          }
+
+          console.log('data after send', data)
+          try {
+            var dataResponse = await this.axios.post('http://localhost:9000/employee' , data)
+            this.initialize()
+            console.log('data response ==> ', dataResponse)
+          } catch (error) {
+            console.log(error.message)
+          }
+
         } else {
-            Object.assign(this.desserts[this.editedIndex] , this.editedItem)
+          //  Object.assign(this.desserts[this.editedIndex] , this.editedItem)
+           var data = {
+            firstName: this.firstName,
+            lastName: this.lastName,
+            salary: this.salary,
+            role: {
+              name: this.role
+              },
+              skills: [
+                {skill: ''}
+              ]
+          }
+
+          console.log('data after send', data)
+          try {
+            var dataResponse = await this.axios.put('http://localhost:9000/employee/' + this.idEmployee , data)
+            this.initialize()
+            console.log('data response ==> ', dataResponse)
+          } catch (error) {
+            console.log(error.message)
+          }
         }
         this.close()
       },
