@@ -29,6 +29,13 @@
 
       <v-btn
         text
+        @click="goToExam()"
+      >
+        CONNECT BACKEND
+      </v-btn>
+
+      <v-btn
+        text
         @click="goToManage()"
       >
         หน้าจัดการข้อมูล
@@ -64,6 +71,10 @@ export default {
 
     goToManage() {
       this.$router.push( {path: '/manageTable'} ).catch(() => {})
+    },
+    
+    goToExam() {
+      this.$router.push( {path: '/Exam'} ).catch(() => {})
     }
   }
 }
