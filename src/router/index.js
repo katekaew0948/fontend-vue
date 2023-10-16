@@ -27,6 +27,16 @@ const routes = [
     path: '/manageTable',
     name: 'manageTable',
     component: () => import('../views/TableView.vue')
+  },
+  {
+    path: '/artist',
+    name: 'artist',
+    component: () => import('../views/ArtistView.vue')
+  },
+  {
+    path: '/content',
+    name: 'content',
+    component: () => import('../views/ContentView.vue')
   }
 ]
 

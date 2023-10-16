@@ -2,36 +2,27 @@
   <v-app>
     <v-app-bar
       app
-      color="primary"
-      dark
+      color="#F0CF6D"
+      light
     >
       <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
+        COMART
       </div>
 
       <v-spacer></v-spacer>
 
       <v-btn
         text
-        @click="goToManage()"
+        @click="goToHome()"
       >
-        หน้าจัดการข้อมูล
+        หน้าหลัก
+      </v-btn>
+
+      <v-btn
+        text
+        @click="goToContent()"
+      >
+        หน้าจัดการร้าน
       </v-btn>
 
       <v-btn
@@ -64,6 +55,13 @@ export default {
 
     goToManage() {
       this.$router.push( {path: '/manageTable'} ).catch(() => {})
+    },
+
+    goToHome(){
+      this.$router.push( {path: '/'} ).catch(() => {})
+    },
+    goToContent(){
+      this.$router.push( {path: '/content'} ).catch(() => {})
     }
   }
 }

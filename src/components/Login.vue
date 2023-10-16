@@ -8,7 +8,7 @@
           lazy-validation
         >
           <v-text-field
-            v-model="name"
+            v-model="username"
             :counter="20"
             :rules="nameRules"
             label="ชื่อผู้ใช้งาน"
@@ -45,7 +45,7 @@
 export default {
   data: () => ({
       valid: true,
-      name: '',
+      username: '',
       nameRules: [
         v => !!v || 'กรุณากรอกชื่อผู้ใช้งาน',
         v => (v && v.length <= 20) || 'ชื่อผู้ใช้ห้ามเกิน 20 ตัวอักษร',
@@ -54,15 +54,21 @@ export default {
       passwordRules: [
         v => !!v || 'กรุณากรอกรหัสผ่าน',
         
-      ]
+      ],
+      id: 0,
+      accountItem:[],
     }),
 
     methods: {
-      Login() {
+      async Login() {
         if (this.$refs.loginForm.validate(true)) {
-          localStorage.setItem('username' , this.name)
-          this.$EventBus.$emit('getUsername')
-          this.$router.push('/')
+          var validateAccount = await this.axios.get(
+            'localhost:9000/account?username='+this.username+ '&password='+this.password)
+          console.log('validateAccount ===> ' ,validateAccount)
+          // this.accountItem = account.data
+          // localStorage.setItem('username' , this.name)
+          // this.$EventBus.$emit('getUsername')
+          // this.$router.push('/')
         }
       }
     }
